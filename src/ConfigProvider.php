@@ -1,6 +1,8 @@
 <?php
 
-declare(strict_types= 1);
+declare(strict_types=1);
+
+namespace Axleus\ConfigManager;
 
 class ConfigProvider
 {
@@ -8,21 +10,21 @@ class ConfigProvider
     {
         return [
             "dependencies" => $this->getDependencies(),
-            "listeners"=> $this->getListeners(),
+            "listeners"    => $this->getListeners(),
         ];
     }
 
     public function getDependencies(): array
     {
         return [
-            "aliases"=> [],
-            "deligators"=> [],
-            'factories'=>[],
+            "aliases"    => [],
+            "delegators" => [],
+            'factories'  => [],
         ];
     }
 
     public function getListeners(): array
     {
-        return [];    
+        return [];
     }
 }
