@@ -82,18 +82,17 @@ final class ConfigManager extends AbstractListenerAggregate
          * If ->toFile() fails then call ->stopPropagation() on event instance
          */
 
-
         $targetKey = $event->getTarget();
         if (!empty($targetKey)) {
             $this->config['axleus_settings'] = $targetKey;
         }
 
         $namespaceArray = explode("\\", $targetKey);
-        $namespace = implode("-", [$namespaceArray[0], $namespaceArray[1]]);
+        $namespace = strtolower(implode("-", [$namespaceArray[0], $namespaceArray[1]]));
 
         try {
-            $writer = new Writer\PhpArray;
-            $config = $writer->processConfig($this->config);
+            $writer = new Writer\PhpArray();
+            $config = $event->getFormData();
             $writer->toFile("config/autoload/$namespace.global.php", $config);
         } catch (\Exception $e) {
             $event->stopPropagation();
