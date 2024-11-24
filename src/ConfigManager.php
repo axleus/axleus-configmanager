@@ -10,7 +10,7 @@ use Laminas\EventManager\EventManagerInterface;
 
 final class ConfigManager extends AbstractListenerAggregate
 {
-    
+
     public function __construct(
         private array $config
     ) {
@@ -59,13 +59,17 @@ final class ConfigManager extends AbstractListenerAggregate
             $configCacheFile = $event->getFilename();
 
             unlink($configCacheFile);
-        }             
+        }
     }
 
     public function onLoadConfig(Event\ConfigEvent $event)
     {
+        $targetKey = $event->getTarget(); //This will hold the FQCN of the ConfigProvider for the config
+        if (! empty($this->config['app_settings'][$targetKey])) {
+            return $this->config['app_settings'][$targetKey];
+        }
         // handle loading config
-        return $this->config;
+        return [];
     }
 
     public function onSaveConfig(Event\ConfigEvent $event)
