@@ -72,8 +72,8 @@ final class ConfigManager extends AbstractListenerAggregate
         return [];
     }
 
-    public function onSaveConfig(Event\ConfigEvent $event, Writer\PhpArray $writer)
-    {
+    public function onSaveConfig(Event\ConfigEvent $event)
+    {        
         /**
          * merge config from $this->config with config passed
          * via event, allowing event provided data to overwrite
@@ -82,14 +82,19 @@ final class ConfigManager extends AbstractListenerAggregate
          * If ->toFile() fails then call ->stopPropagation() on event instance
          */
 
+
         $targetKey = $event->getTarget();
         if (!empty($targetKey)) {
             $this->config['axleus_settings'] = $targetKey;
         }
 
+        $namespaceArray = explode("\\", $targetKey);
+        $namespace = implode("-", [$namespaceArray[0], $namespaceArray[1]]);
+
         try {
-            $config = $writer->processConfig($this->config); //??
-            $writer->toFile('config/config.php', $config);
+            $writer = new Writer\PhpArray;
+            $config = $writer->processConfig($this->config);
+            $writer->toFile("config/autoload/$namespace.global.php", $config);
         } catch (\Exception $e) {
             $event->stopPropagation();
             throw $e;
