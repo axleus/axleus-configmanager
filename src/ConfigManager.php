@@ -10,6 +10,7 @@ use Laminas\EventManager\EventManagerInterface;
 
 final class ConfigManager extends AbstractListenerAggregate
 {
+    
     public function __construct(
         private array $config
     ) {
@@ -50,11 +51,21 @@ final class ConfigManager extends AbstractListenerAggregate
          * locate config cache file in /data/cache
          * remove delete it
          */
+
+        $configCacheFilePath = $this->config['config_cache_path'] ?? null;
+
+        if ($configCacheFilePath) {
+            $event->setFilename($configCacheFilePath);
+            $configCacheFile = $event->getFilename();
+
+            unlink($configCacheFile);
+        }             
     }
 
     public function onLoadConfig(Event\ConfigEvent $event)
     {
         // handle loading config
+        return $this->config;
     }
 
     public function onSaveConfig(Event\ConfigEvent $event)
