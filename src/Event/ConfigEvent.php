@@ -33,4 +33,6 @@ class ConfigEvent extends Event
     {
         return $this->getParam('filename');
     }
+
+    
 }

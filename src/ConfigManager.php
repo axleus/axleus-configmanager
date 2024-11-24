@@ -54,7 +54,7 @@ final class ConfigManager extends AbstractListenerAggregate
 
         $configCacheFilePath = $this->config['config_cache_path'] ?? null;
 
-        if ($configCacheFilePath) {
+        if (!$this->config['debug'] && file_exists($configCacheFilePath)) {
             $event->setFilename($configCacheFilePath);
             $configCacheFile = $event->getFilename();
 
