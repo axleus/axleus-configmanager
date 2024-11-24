@@ -65,14 +65,14 @@ final class ConfigManager extends AbstractListenerAggregate
     public function onLoadConfig(Event\ConfigEvent $event)
     {
         $targetKey = $event->getTarget(); //This will hold the FQCN of the ConfigProvider for the config
-        if (! empty($this->config['app_settings'][$targetKey])) {
-            return $this->config['app_settings'][$targetKey];
+        if (!empty($this->config['axleus_settings'][$targetKey])) {
+            return $this->config['axleus_settings'][$targetKey];
         }
         // handle loading config
         return [];
     }
 
-    public function onSaveConfig(Event\ConfigEvent $event)
+    public function onSaveConfig(Event\ConfigEvent $event, Writer\PhpArray $writer)
     {
         /**
          * merge config from $this->config with config passed
@@ -81,5 +81,18 @@ final class ConfigManager extends AbstractListenerAggregate
          *
          * If ->toFile() fails then call ->stopPropagation() on event instance
          */
+
+        $targetKey = $event->getTarget();
+        if (!empty($targetKey)) {
+            $this->config['axleus_settings'] = $targetKey;
+        }
+
+        try {
+            $config = $writer->processConfig($this->config); //??
+            $writer->toFile('config/config.php', $config);
+        } catch (\Exception $e) {
+            $event->stopPropagation();
+            throw $e;
+        }
     }
 }
