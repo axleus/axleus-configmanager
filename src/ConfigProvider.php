@@ -30,7 +30,6 @@ class ConfigProvider
         return [
             [
                 'listener' => ConfigManager::class,
-                'priority' => -100
             ]
         ];
     }
