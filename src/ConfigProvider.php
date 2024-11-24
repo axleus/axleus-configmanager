@@ -19,12 +19,19 @@ class ConfigProvider
         return [
             "aliases"    => [],
             "delegators" => [],
-            'factories'  => [],
+            'factories'  => [
+                ConfigManager::class => ConfigManagerFactory::class,
+            ],
         ];
     }
 
     public function getListeners(): array
     {
-        return [];
+        return [
+            [
+                'listener' => ConfigManager::class,
+                'priority' => -100
+            ]
+        ];
     }
 }
