@@ -33,4 +33,15 @@ class ConfigEvent extends Event
     {
         return $this->getParam('filename');
     }
+
+    public function setFormData(array $formData): self
+    {
+        $this->getParam('formData', $formData);
+        return $this;
+    }
+
+    public function getFormData(): array
+    {
+        return $this->getParam('formData');
+    }
 }

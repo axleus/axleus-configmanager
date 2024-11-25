@@ -10,6 +10,7 @@ use Laminas\EventManager\EventManagerInterface;
 
 final class ConfigManager extends AbstractListenerAggregate
 {
+
     public function __construct(
         private array $config
     ) {
@@ -54,15 +55,29 @@ final class ConfigManager extends AbstractListenerAggregate
          * locate config cache file in /data/cache
          * remove delete it
          */
+
+        $configCacheFilePath = $this->config['config_cache_path'] ?? null;
+
+        if (!$this->config['debug'] && file_exists($configCacheFilePath)) {
+            $event->setFilename($configCacheFilePath);
+            $configCacheFile = $event->getFilename();
+
+            unlink($configCacheFile);
+        }
     }
 
     public function onLoadConfig(Event\ConfigEvent $event)
     {
+        $targetKey = $event->getTarget(); //This will hold the FQCN of the ConfigProvider for the config
+        if (!empty($this->config['axleus_settings'][$targetKey])) {
+            return $this->config['axleus_settings'][$targetKey];
+        }
         // handle loading config
+        return [];
     }
 
     public function onSaveConfig(Event\ConfigEvent $event)
-    {
+    {        
         /**
          * merge config from $this->config with config passed
          * via event, allowing event provided data to overwrite
@@ -70,5 +85,22 @@ final class ConfigManager extends AbstractListenerAggregate
          *
          * If ->toFile() fails then call ->stopPropagation() on event instance
          */
+
+        $targetKey = $event->getTarget();
+        if (!empty($targetKey)) {
+            $this->config['axleus_settings'] = $targetKey;
+        }
+
+        $namespaceArray = explode("\\", $targetKey);
+        $namespace = strtolower(implode("-", [$namespaceArray[0], $namespaceArray[1]]));
+
+        try {
+            $writer = new Writer\PhpArray();
+            $config = $event->getFormData();
+            $writer->toFile("config/autoload/$namespace.global.php", $config);
+        } catch (\Exception $e) {
+            $event->stopPropagation();
+            throw $e;
+        }
     }
 }
