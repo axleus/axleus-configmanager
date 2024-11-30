@@ -23,25 +23,25 @@ class ConfigEvent extends Event
         return $this->getParam('path');
     }
 
-    public function setFilename(string $filename): self
+    public function setTargetFile(string $targetFile): self
     {
-        $this->setParam('filename', $filename);
+        $this->setParam('targetFile', $targetFile);
         return $this;
     }
 
-    public function getFilename(): ?string
+    public function getTargetFile(): ?string
     {
-        return $this->getParam('filename');
+        return $this->getParam('targetFile');
     }
 
-    public function setFormData(array $formData): self
+    public function setUpdatedConfig(array $updatedConfig): self
     {
-        $this->getParam('formData', $formData);
+        $this->getParam('updatedConfig', $updatedConfig);
         return $this;
     }
 
-    public function getFormData(): array
+    public function getUpdatedConfig(): array
     {
-        return $this->getParam('formData');
+        return $this->getParam('updatedConfig');
     }
 }
