@@ -4,12 +4,18 @@ declare(strict_types=1);
 
 namespace Axleus\ConfigManager;
 
-use Laminas\Config\Factory;
+use Laminas\ConfigAggregator\ArrayProvider;
+use Laminas\ConfigAggregator\ConfigAggregator;
 use Laminas\EventManager\AbstractListenerAggregate;
 use Laminas\EventManager\EventManagerInterface;
+use SplFileInfo;
+use Webimpress\SafeWriter;
+
+use function getcwd;
 
 final class ConfigManager extends AbstractListenerAggregate
 {
+
     public function __construct(
         private array $config
     ) {
@@ -48,27 +54,49 @@ final class ConfigManager extends AbstractListenerAggregate
         );
     }
 
-    public function onBustCache(Event\ConfigEvent $event)
+    public function onBustCache(Event\ConfigEvent $event): bool
     {
-        /**
-         * locate config cache file in /data/cache
-         * remove delete it
-         */
+        // if this is development-mode then skip out now
+        if ($this->config['debug']) {
+            return true;
+        }
+        $fileInfo = new SplFileInfo(getcwd() . '/' . $this->config['config_cache_path']);
+        if (! $fileInfo->isDir() && $fileInfo->isFile() && $fileInfo->isWritable()) {
+            $path = $fileInfo->getRealPath();
+            unset($fileInfo);
+            return unlink($path);
+        }
+        return false;
     }
 
-    public function onLoadConfig(Event\ConfigEvent $event)
+    public function onLoadConfig(Event\ConfigEvent $event): array
     {
-        // handle loading config
+        return $this->config[$event->getTarget()] ?? [];
     }
 
     public function onSaveConfig(Event\ConfigEvent $event)
     {
-        /**
-         * merge config from $this->config with config passed
-         * via event, allowing event provided data to overwrite
-         * use Writer\PhpArray to write file via ->toFile()
-         *
-         * If ->toFile() fails then call ->stopPropagation() on event instance
-         */
+        try {
+            $targetProvider = $event->getTarget();
+            $targetFile     = getcwd() . '/config/autoload/' . $event->getTargetFile();
+            $targetFilePath = (new SplFileInfo($targetFile))->getRealPath();
+            $currentConfig  = [$targetProvider => $this->config[$targetProvider]];
+            $aggregator     = new ConfigAggregator([
+                new ArrayProvider($currentConfig),
+                new ArrayProvider([$targetProvider => $event->getUpdatedConfig()])
+            ]);
+            $writer = new Writer\PhpArray();
+            $writer->setUseBracketArraySyntax(true);
+            $writer->setUseClassNameScalars(true);
+            // todo: Migrate to webimpress safe writer
+            $writer->toFile($targetFilePath, $aggregator->getMergedConfig());
+        } catch (\Throwable $e) {
+            $event->stopPropagation();
+            throw $e;
+        }
+        if ($this->config['debug']) {
+            $event->stopPropagation();
+        }
+        return true;
     }
 }
