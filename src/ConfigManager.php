@@ -21,7 +21,8 @@ final class ConfigManager extends AbstractListenerAggregate
         // If save/write fails stop propagation so the cache will not be busted
         $this->listeners[] = $events->attach(
             Event\ConfigEvent::EVENT_CONFIG_SAVE,
-            [$this, 'onSaveConfig', $priority]
+            [$this, 'onSaveConfig'],
+            $priority
         );
 
         /**
@@ -31,17 +32,20 @@ final class ConfigManager extends AbstractListenerAggregate
          */
         $this->listeners[] = $events->attach(
             Event\ConfigEvent::EVENT_CONFIG_SAVE,
-            [$this, 'onBustCache', 0]
+            [$this, 'onBustCache'],
+            0
         );
 
         $this->listeners[] = $events->attach(
             Event\ConfigEvent::EVENT_BUST_CACHE,
-            [$this, 'onBustCache', $priority]
+            [$this, 'onBustCache'],
+            $priority
         );
 
         $this->listeners[] = $events->attach(
             Event\ConfigEvent::EVENT_CONFIG_LOAD,
-            [$this, 'onLoadConfig', $priority]
+            [$this, 'onLoadConfig'],
+            $priority
         );
     }
 
