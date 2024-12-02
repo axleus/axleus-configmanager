@@ -9,12 +9,14 @@ use Laminas\ConfigAggregator\ConfigAggregator;
 use Laminas\EventManager\AbstractListenerAggregate;
 use Laminas\EventManager\EventManagerInterface;
 use SplFileInfo;
-use Webimpress\SafeWriter;
+use Webimpress\SafeWriter\Exception\ExceptionInterface as FileWriterException;
+use Webimpress\SafeWriter\FileWriter;
 
 use function getcwd;
 
 final class ConfigManager extends AbstractListenerAggregate
 {
+    private ConfigAggregator $configAggregator;
 
     public function __construct(
         private array $config
@@ -81,15 +83,13 @@ final class ConfigManager extends AbstractListenerAggregate
             $targetFile     = getcwd() . '/config/autoload/' . $event->getTargetFile();
             $targetFilePath = (new SplFileInfo($targetFile))->getRealPath();
             $currentConfig  = [$targetProvider => $this->config[$targetProvider]];
-            $aggregator     = new ConfigAggregator([
+            // read, merge and process the config, no caching during this write
+            $configWriter   = new ConfigWriter([
                 new ArrayProvider($currentConfig),
                 new ArrayProvider([$targetProvider => $event->getUpdatedConfig()])
             ]);
-            $writer = new Writer\PhpArray();
-            $writer->setUseBracketArraySyntax(true);
-            $writer->setUseClassNameScalars(true);
-            // todo: Migrate to webimpress safe writer
-            $writer->toFile($targetFilePath, $aggregator->getMergedConfig());
+            // write file
+            $configWriter->writeConfig($targetFilePath);
         } catch (\Throwable $e) {
             $event->stopPropagation();
             throw $e;
