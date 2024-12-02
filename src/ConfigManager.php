@@ -5,19 +5,14 @@ declare(strict_types=1);
 namespace Axleus\ConfigManager;
 
 use Laminas\ConfigAggregator\ArrayProvider;
-use Laminas\ConfigAggregator\ConfigAggregator;
 use Laminas\EventManager\AbstractListenerAggregate;
 use Laminas\EventManager\EventManagerInterface;
 use SplFileInfo;
-use Webimpress\SafeWriter\Exception\ExceptionInterface as FileWriterException;
-use Webimpress\SafeWriter\FileWriter;
 
 use function getcwd;
 
 final class ConfigManager extends AbstractListenerAggregate
 {
-    private ConfigAggregator $configAggregator;
-
     public function __construct(
         private array $config
     ) {
