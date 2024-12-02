@@ -18,7 +18,7 @@ class ConfigCannotBeWrittenException extends RuntimeException
     {
         return new self(
             sprintf(
-                'Cannot export config into a cache file. Config contains uncacheable entries: %s',
+                'Cannot export config to file. Config contains invalid entries: %s',
                 $exportException->getMessage()
             ),
             $exportException->getCode(),
