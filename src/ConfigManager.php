@@ -8,6 +8,7 @@ use Laminas\ConfigAggregator\ArrayProvider;
 use Laminas\EventManager\AbstractListenerAggregate;
 use Laminas\EventManager\EventManagerInterface;
 use SplFileInfo;
+use Webimpress\SafeWriter\Exception\ExceptionInterface as FileWriterException;
 
 use function getcwd;
 
@@ -85,7 +86,7 @@ final class ConfigManager extends AbstractListenerAggregate
             ]);
             // write file
             $configWriter->writeConfig($targetFilePath);
-        } catch (\Throwable $e) {
+        } catch (FileWriterException $e) {
             $event->stopPropagation();
             throw $e;
         }
