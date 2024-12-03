@@ -1,6 +1,6 @@
 {
     "name": "axleus/axleus-configmanager",
-    "description": "Admin Dashboard and overview for Axleus Modules",
+    "description": "Configuration Manager for Axleus",
     "license": "BSD-3-Clause",
     "keywords": [
         "axleus",
