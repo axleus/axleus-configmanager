@@ -48,7 +48,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "AxleusTest\\ConfigManager\\": "test/"
+            "AxleusTest\\ConfigManager\\": "test/unit/",
+            "AxleusIntegrationTest\\ConfigManager\\": "test/integration/"
         }
     },
     "scripts": {
