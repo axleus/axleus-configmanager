@@ -14,7 +14,7 @@ use function sprintf;
 
 final class ConfigWriter extends ConfigAggregator implements ConfigWriterInterface
 {
-    private const string CONFIG_TEMPLATE = <<<'EOT'
+    private const CONFIG_TEMPLATE = <<<'EOT'
 <?php
 
 declare(strict_types=1);
