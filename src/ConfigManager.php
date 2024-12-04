@@ -12,8 +12,13 @@ use Webimpress\SafeWriter\Exception\ExceptionInterface as FileWriterException;
 
 use function getcwd;
 
-final class ConfigManager extends AbstractListenerAggregate
+class ConfigManager extends AbstractListenerAggregate
 {
+    /**
+     *
+     * @param non-empty-array{'config_cache_path': string, 'debug': bool} $config
+     * @return void
+     */
     public function __construct(
         private array $config
     ) {
@@ -44,12 +49,6 @@ final class ConfigManager extends AbstractListenerAggregate
             [$this, 'onBustCache'],
             $priority
         );
-
-        $this->listeners[] = $events->attach(
-            Event\ConfigEvent::EVENT_CONFIG_LOAD,
-            [$this, 'onLoadConfig'],
-            $priority
-        );
     }
 
     public function onBustCache(Event\ConfigEvent $event): bool
@@ -67,12 +66,7 @@ final class ConfigManager extends AbstractListenerAggregate
         return false;
     }
 
-    public function onLoadConfig(Event\ConfigEvent $event): array
-    {
-        return $this->config[$event->getTarget()] ?? [];
-    }
-
-    public function onSaveConfig(Event\ConfigEvent $event)
+    public function onSaveConfig(Event\ConfigEvent $event): bool
     {
         try {
             $targetProvider = $event->getTarget();
