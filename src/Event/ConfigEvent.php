@@ -36,12 +36,12 @@ class ConfigEvent extends Event
 
     public function setUpdatedConfig(array $updatedConfig): self
     {
-        $this->getParam('updatedConfig', $updatedConfig);
+        $this->setParam('updatedConfig', $updatedConfig);
         return $this;
     }
 
     public function getUpdatedConfig(): array
     {
-        return $this->getParam('updatedConfig');
+        return $this->getParam('updatedConfig', []);
     }
 }

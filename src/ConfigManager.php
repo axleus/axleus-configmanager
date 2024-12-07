@@ -11,6 +11,7 @@ use SplFileInfo;
 use Webimpress\SafeWriter\Exception\ExceptionInterface as FileWriterException;
 
 use function getcwd;
+use function realpath;
 
 class ConfigManager extends AbstractListenerAggregate
 {
@@ -57,11 +58,11 @@ class ConfigManager extends AbstractListenerAggregate
         if ($this->config['debug']) {
             return true;
         }
-        $fileInfo = new SplFileInfo(getcwd() . '/' . $this->config['config_cache_path']);
-        if (! $fileInfo->isDir() && $fileInfo->isFile() && $fileInfo->isWritable()) {
+        $fileInfo = new SplFileInfo($this->config['config_cache_path']);
+        if ($fileInfo->isFile()) {
             $path = $fileInfo->getRealPath();
             unset($fileInfo);
-            return unlink($path);
+            return @unlink($path);
         }
         return false;
     }
@@ -69,17 +70,19 @@ class ConfigManager extends AbstractListenerAggregate
     public function onSaveConfig(Event\ConfigEvent $event): bool
     {
         try {
+            $isWritten      = false;
             $targetProvider = $event->getTarget();
-            $targetFile     = getcwd() . '/config/autoload/' . $event->getTargetFile();
-            $targetFilePath = (new SplFileInfo($targetFile))->getRealPath();
-            $currentConfig  = [$targetProvider => $this->config[$targetProvider]];
+            $targetFile     = $event->getTargetFile();
             // read, merge and process the config, no caching during this write
             $configWriter   = new ConfigWriter([
-                new ArrayProvider($currentConfig),
-                new ArrayProvider([$targetProvider => $event->getUpdatedConfig()])
+                new ArrayProvider($this->config[$targetProvider]),
+                new ArrayProvider($event->getUpdatedConfig())
             ]);
-            // write file
-            $configWriter->writeConfig($targetFilePath);
+            if (! empty($targetFile)) {
+                // write file
+                $configWriter->writeConfig($targetFile);
+                $isWritten = true;
+            }
         } catch (FileWriterException $e) {
             $event->stopPropagation();
             throw $e;
@@ -87,6 +90,6 @@ class ConfigManager extends AbstractListenerAggregate
         if ($this->config['debug']) {
             $event->stopPropagation();
         }
-        return true;
+        return $isWritten;
     }
 }
