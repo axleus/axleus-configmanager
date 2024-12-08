@@ -7,10 +7,8 @@ namespace Axleus\ConfigManager;
 use Laminas\ConfigAggregator\ArrayProvider;
 use Laminas\EventManager\AbstractListenerAggregate;
 use Laminas\EventManager\EventManagerInterface;
-use SplFileInfo;
 use Webimpress\SafeWriter\Exception\ExceptionInterface as FileWriterException;
 
-use function getcwd;
 use function realpath;
 
 class ConfigManager extends AbstractListenerAggregate
@@ -58,13 +56,8 @@ class ConfigManager extends AbstractListenerAggregate
         if ($this->config['debug']) {
             return true;
         }
-        $fileInfo = new SplFileInfo($this->config['config_cache_path']);
-        if ($fileInfo->isFile()) {
-            $path = $fileInfo->getRealPath();
-            unset($fileInfo);
-            return @unlink($path);
-        }
-        return false;
+
+        return @unlink(realpath($event->getTargetCache()));
     }
 
     public function onSaveConfig(Event\ConfigEvent $event): bool
@@ -75,7 +68,7 @@ class ConfigManager extends AbstractListenerAggregate
             $targetFile     = $event->getTargetFile();
             // read, merge and process the config, no caching during this write
             $configWriter   = new ConfigWriter([
-                new ArrayProvider($this->config[$targetProvider]),
+                new ArrayProvider([$targetProvider => $this->config[$targetProvider]]),
                 new ArrayProvider($event->getUpdatedConfig())
             ]);
             if (! empty($targetFile)) {

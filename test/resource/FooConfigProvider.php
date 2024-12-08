@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AxleusTest\ConfigManager\Resources;
+namespace AxleusTestResource\ConfigManager;
 
 class FooConfigProvider implements ConfigProviderInterface
 {
@@ -19,6 +19,7 @@ class FooConfigProvider implements ConfigProviderInterface
     {
         return [
             'baz' => 'bat',
+            'key_old' => 'key_old',
         ];
     }
 }

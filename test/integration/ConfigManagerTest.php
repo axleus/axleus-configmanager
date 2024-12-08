@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace AxleusTest\ConfigManager;
+namespace AxleusIntegrationTest\ConfigManager;
 
 use Axleus\ConfigManager\ConfigManager;
 use Axleus\ConfigManager\Event\ConfigEvent;
-use AxleusTest\ConfigManager\Resources\FooConfigProvider;
+use AxleusTestResource\ConfigManager as Resource;
 use PHPUnit\Framework\TestCase;
 
 use function file_exists;
@@ -17,31 +17,34 @@ use function mkdir;
 use function rmdir;
 use function sys_get_temp_dir;
 use function unlink;
+use function var_export;
 
 final class ConfigManagerTest extends TestCase
 {
     private const CACHE_FILE = '/config-cache.php';
-    private const CACHE_KEY  = 'config_cache_path';
+    private const array UPDATED_CONFIG = [
+        Resource\FooConfigProvider::class => [
+            'baz' => 'yada',
+            'key_old' => 'value_new',
+        ]
+    ];
     private string $dir;
     private string $cacheFile;
     private string $targetFile;
-    private array $config = [
-        'debug' => false,
-    ];
+
+    private array $config = [];
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->dir = sys_get_temp_dir() . '/config_manager';
+        $this->dir = sys_get_temp_dir() . '/axleus_config_manager';
         if (! is_dir($this->dir)) {
             mkdir($this->dir);
         }
         $this->cacheFile  = $this->dir . self::CACHE_FILE;
         $this->targetFile = $this->dir;
-        $provider         = new Resources\FooConfigProvider();
-        $this->config[Resources\FooConfigProvider::class] = $provider->getAxleusConfig();
-        file_put_contents($this->cacheFile, $provider->getAxleusConfig());
-        $this->config[self::CACHE_KEY] = $this->cacheFile;
+        $this->config     = (new Resource\FooConfigProvider())();
+        file_put_contents($this->cacheFile, var_export($this->config));
     }
 
     protected function tearDown(): void
@@ -59,38 +62,34 @@ final class ConfigManagerTest extends TestCase
 
     public function testConfigManagerCanBustCache(): void
     {
+        $this->config['debug'] = false;
         $configManager = new ConfigManager($this->config);
-        $eventResult   = $configManager->onBustCache(new ConfigEvent());
+        $event         = new ConfigEvent();
+        $event->setTargetCache($this->cacheFile);
+        $eventResult   = $configManager->onBustCache($event);
         self::assertFileDoesNotExist($this->cacheFile);
         self::assertTrue($eventResult === true);
     }
 
     public function testConfigManagerCanWriteUpdatedConfig(): void
     {
+        $this->config['debug'] = true;
         $configManager    = new ConfigManager($this->config);
-        $configEvent      = new ConfigEvent(null, FooConfigProvider::class);
-        $this->targetFile = $this->targetFile . '/' . FooConfigProvider::CONFIG_MANAGER_TARGET_FILE;
+        $configEvent      = new ConfigEvent(null, Resource\FooConfigProvider::class);
+        $this->targetFile = $this->targetFile . '/' . Resource\FooConfigProvider::CONFIG_MANAGER_TARGET_FILE;
         $configEvent->setTargetFile($this->targetFile);
-        $configEvent->setUpdatedConfig(include 'config/test.global.php');
+        $configEvent->setUpdatedConfig(self::UPDATED_CONFIG);
         $eventResult   = $configManager->onSaveConfig($configEvent);
         self::assertFileExists($configEvent->getTargetFile());
-        $writtenConfig = include $this->targetFile;
-        self::assertSame(
-            [
-                FooConfigProvider::class => [
-                    'test_key' => 'test_value',
-                    'baz'      => 'bat',
-                ],
-            ], $writtenConfig);
+        self::assertSame(self::UPDATED_CONFIG, include $this->targetFile);
         self::assertTrue($eventResult === true);
     }
 
-    // todo: split this test out
     public function testConfigManagerStopsPropagationWhenInDevelopmentMode(): void
     {
         $this->config['debug'] = true;
         $configManager         = new ConfigManager($this->config);
-        $configEvent           = new ConfigEvent(null, FooConfigProvider::class);
+        $configEvent           = new ConfigEvent(null, Resource\FooConfigProvider::class);
         $eventResult           = $configManager->onSaveConfig($configEvent);
         self::assertTrue($configEvent->propagationIsStopped() === true);
     }

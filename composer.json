@@ -49,7 +49,8 @@
     "autoload-dev": {
         "psr-4": {
             "AxleusTest\\ConfigManager\\": "test/unit/",
-            "AxleusIntegrationTest\\ConfigManager\\": "test/integration/"
+            "AxleusIntegrationTest\\ConfigManager\\": "test/integration/",
+            "AxleusTestResource\\ConfigManager\\": "test/resource/"
         }
     },
     "scripts": {
@@ -60,8 +61,8 @@
         ],
         "cs-check": "phpcs",
         "cs-fix": "phpcbf",
-        "static-analysis": "phpstan analyse -l 5 src test",
-        "test": "phpunit --colors=always --testsuite \"unit test\"",
+        "static-analysis": "phpstan analyse -l 5 src",
+        "test": "phpunit --colors=always test",
         "test-coverage": "phpunit --colors=always --coverage-clover clover.xml",
         "test-integration": "phpunit --colors=always --testsuite \"integration test\""
     },

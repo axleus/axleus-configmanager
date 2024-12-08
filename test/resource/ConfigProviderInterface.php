@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AxleusTest\ConfigManager\Resources;
+namespace AxleusTestResource\ConfigManager;
 
 interface ConfigProviderInterface
 {
