@@ -21,10 +21,7 @@
             <directory>test/integration</directory>
         </testsuite>
     </testsuites>
-    <coverage includeUncoveredFiles="true"
-            pathCoverage="false"
-            disableCodeCoverageIgnore="true"
-    >
+    <coverage pathCoverage="false" disableCodeCoverageIgnore="true">
     </coverage>
     <source>
         <include>
