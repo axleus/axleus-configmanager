@@ -1,3 +1,16 @@
 {
-    "ignore_php_platform_requirement": true
+    "ignore_php_platform_requirements": {
+        "8.4": true
+    },
+    "stablePHP": "8.3.14",
+    "additional_checks": [
+        {
+            "name": "PhpStan",
+            "job": {
+                "php": "8.3",
+                "dependencies": "latest",
+                "command": "composer vendor/bin/phpstan -l 5 src analyse"
+            }
+        }
+    ]
 }
