@@ -7,8 +7,8 @@
     "additional_checks": [
         {
             "name": "PHPStan",
-            "php": "8.3",
             "job": {
+                "php": "8.3",
                 "command": "composer static-analysis"
             }
         }
