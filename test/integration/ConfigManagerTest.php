@@ -76,12 +76,13 @@ final class ConfigManagerTest extends TestCase
         $this->config['debug'] = true;
         $configManager    = new ConfigManager($this->config);
         $configEvent      = new ConfigEvent(null, Resource\FooConfigProvider::class);
-        $this->targetFile = $this->targetFile . '/' . Resource\FooConfigProvider::CONFIG_MANAGER_TARGET_FILE;
+        $this->targetFile = $this->targetFile . '/' . Resource\FooConfigProvider::TARGET_FILE;
         $configEvent->setTargetFile($this->targetFile);
         $configEvent->setUpdatedConfig(self::UPDATED_CONFIG);
         $eventResult   = $configManager->onSaveConfig($configEvent);
         self::assertFileExists($configEvent->getTargetFile());
-        self::assertSame(self::UPDATED_CONFIG, include $this->targetFile);
+        $writtenData = include $this->targetFile;
+        self::assertSame(self::UPDATED_CONFIG, $writtenData);
         self::assertTrue($eventResult === true);
     }
 

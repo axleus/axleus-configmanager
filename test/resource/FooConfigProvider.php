@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace AxleusTestResource\ConfigManager;
 
+use Axleus\Core\ConfigProviderInterface;
+
 class FooConfigProvider implements ConfigProviderInterface
 {
-    public const CONFIG_MANAGER_TARGET_FILE = 'foo.global.php';
+    public const TARGET_FILE = 'foo.global.php';
 
     public function __invoke(): array
     {
