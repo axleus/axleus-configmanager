@@ -56,4 +56,9 @@ class ConfigEvent extends Event
     {
         return $this->getParam('targetCache', self::DEFAULT_CACHE);
     }
+
+    public function testSaRun()
+    {
+
+    }
 }
