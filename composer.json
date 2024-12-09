@@ -33,6 +33,7 @@
         "phpstan/phpstan": "^2.0",
         "phpstan/phpstan-deprecation-rules": "^2.0",
         "phpstan/phpstan-phpunit": "^2.0",
+        "phpunit/php-code-coverage": "^11.0",
         "phpunit/phpunit": "^11.0",
         "roave/security-advisories": "dev-master"
     },
@@ -63,8 +64,7 @@
         "cs-fix": "phpcbf",
         "static-analysis": "phpstan analyse -l 5 src",
         "test": "phpunit --colors=always test",
-        "test-coverage": "phpunit --colors=always --coverage-clover clover.xml",
-        "test-integration": "phpunit --colors=always --testsuite \"integration test\""
+        "test-coverage": "phpunit --colors=always --coverage-clover clover.xml"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,

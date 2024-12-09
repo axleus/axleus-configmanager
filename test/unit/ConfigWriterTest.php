@@ -6,18 +6,17 @@ namespace AxleusTest\ConfigManager;
 
 use Axleus\ConfigManager\ConfigWriter;
 use AxleusTestResource\ConfigManager\FooConfigProvider;
-use Laminas\ConfigAggregator\ArrayProvider;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
 use function file_exists;
 use function is_dir;
-use function is_file;
 use function mkdir;
-use function realpath;
 use function rmdir;
 use function sys_get_temp_dir;
 use function unlink;
 
+#[CoversClass(ConfigWriter::class)]
 final class ConfigWriterTest extends TestCase
 {
     public final const CONFIG_FILE = __DIR__ . '/../config/test.global.php';

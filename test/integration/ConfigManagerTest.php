@@ -7,6 +7,8 @@ namespace AxleusIntegrationTest\ConfigManager;
 use Axleus\ConfigManager\ConfigManager;
 use Axleus\ConfigManager\Event\ConfigEvent;
 use AxleusTestResource\ConfigManager as Resource;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
 use function file_exists;
@@ -19,6 +21,8 @@ use function sys_get_temp_dir;
 use function unlink;
 use function var_export;
 
+#[CoversClass(ConfigManager::class)]
+#[UsesClass(ConfigEvent::class)]
 final class ConfigManagerTest extends TestCase
 {
     private const CACHE_FILE = '/config-cache.php';
