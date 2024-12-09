@@ -8,13 +8,7 @@
             "name": "PHPStan",
             "job": {
                 "command": "composer static-analysis"
-            },
-            "exclude": [
-                {
-                    "name": "PHPStan",
-                    "php": "8.1"
-                }
-            ]
+            }
         }
     ]
 }
