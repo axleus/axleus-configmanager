@@ -7,7 +7,7 @@
         {
             "name": "PHPStan",
             "job": {
-                "command": "composer vendor/bin/phpstan -l 5 src analyse"
+                "command": "composer static-analysis"
             }
         }
     ]
