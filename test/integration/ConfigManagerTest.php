@@ -26,7 +26,7 @@ use function var_export;
 final class ConfigManagerTest extends TestCase
 {
     private const CACHE_FILE = '/config-cache.php';
-    private const array UPDATED_CONFIG = [
+    private const UPDATED_CONFIG = [
         Resource\FooConfigProvider::class => [
             'baz' => 'yada',
             'key_old' => 'value_new',
