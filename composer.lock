@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "71e99c3c7c419d5ad29166379694a8dd",
+    "content-hash": "3f1ad8e59a067f28c0ab0ce0d41e3f71",
     "packages": [
         {
             "name": "axleus/axleus-admin",
@@ -8071,11 +8071,11 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0"
+        "php": "~8.3.0 || ~8.4.0"
     },
     "platform-dev": [],
     "platform-overrides": {
-        "php": "8.1.99"
+        "php": "8.3.99"
     },
     "plugin-api-version": "2.3.0"
 }
