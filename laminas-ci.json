@@ -7,7 +7,6 @@
         {
             "name": "phpstan",
             "job": {
-                "php": "8.3",
                 "dependencies": "latest",
                 "command": "composer vendor/bin/phpstan -l 5 src analyse"
             }
