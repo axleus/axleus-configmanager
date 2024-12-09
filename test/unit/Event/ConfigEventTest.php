@@ -14,7 +14,8 @@ final class ConfigEventTest extends TestCase
         $path = '/some/path';
         $configEvent = new ConfigEvent();
         $configEvent->setPath($path);
-        self::assertEquals($path, $configEvent->getPath());
+        $returned = $configEvent->getPath();
+        self::assertEquals($path, $returned);
     }
 
     public function testConfigEventCanSetTargetFile(): void
@@ -22,7 +23,8 @@ final class ConfigEventTest extends TestCase
         $targetFile  = 'test.global.php';
         $configEvent = new ConfigEvent();
         $configEvent->setTargetFile($targetFile);
-        self::assertEquals($targetFile, $configEvent->getTargetFile());
+        $returned = $configEvent->getTargetFile();
+        self::assertEquals($targetFile, $returned);
     }
 
     public function testConfigEventCanSetUpdatedConfig(): void
@@ -30,7 +32,8 @@ final class ConfigEventTest extends TestCase
         $updatedConfig = ['some_key' => 'some_value'];
         $configEvent   = new ConfigEvent();
         $configEvent->setUpdatedConfig($updatedConfig);
-        self::assertEquals($updatedConfig, $configEvent->getUpdatedConfig());
+        $returned = $configEvent->getUpdatedConfig();
+        self::assertEquals($updatedConfig, $returned);
     }
 
     public function testConfigEventCanSetTargetCache(): void
@@ -38,6 +41,7 @@ final class ConfigEventTest extends TestCase
         $targetCache = '/some/path/to/cache.php';
         $configEvent = new ConfigEvent();
         $configEvent->setTargetCache($targetCache);
-        self::assertEquals($targetCache, $configEvent->getTargetCache());
+        $returned = $configEvent->getTargetCache();
+        self::assertEquals($targetCache, $returned);
     }
 }
