@@ -48,7 +48,7 @@ final class ConfigManagerTest extends TestCase
         $this->cacheFile  = $this->dir . self::CACHE_FILE;
         $this->targetFile = $this->dir;
         $this->config     = (new Resource\FooConfigProvider())();
-        file_put_contents($this->cacheFile, var_export($this->config));
+        file_put_contents($this->cacheFile, var_export($this->config, true));
     }
 
     protected function tearDown(): void

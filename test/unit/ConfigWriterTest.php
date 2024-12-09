@@ -20,7 +20,7 @@ use function unlink;
 final class ConfigWriterTest extends TestCase
 {
     public final const CONFIG_FILE = __DIR__ . '/../config/test.global.php';
-    private ?string $dir;
+    private string $dir;
     protected string $targetFile = FooConfigProvider::TARGET_FILE;
 
     protected function setUp(): void
