@@ -19,7 +19,7 @@
         }
     ],
     "require": {
-        "php": "~8.3.0",
+        "php": "~8.3.0 || ~8.4.0",
         "axleus/axleus-admin": "dev-master",
         "axleus/axleus-core": "dev-master",
         "axleus/axleus-usermanager": "dev-master"
@@ -62,7 +62,7 @@
         ],
         "cs-check": "phpcs",
         "cs-fix": "phpcbf",
-        "static-analysis": "phpstan analyse -l 5 src",
+        "static-analysis": "phpstan analyse",
         "test": "phpunit --colors=always test",
         "test-coverage": "phpunit --colors=always --coverage-clover clover.xml"
     },
@@ -71,7 +71,7 @@
     "config": {
         "sort-packages": true,
         "platform": {
-            "php": "8.3.99"
+            "php": "8.2.99"
         },
         "allow-plugins": {
             "laminas/laminas-component-installer": true,

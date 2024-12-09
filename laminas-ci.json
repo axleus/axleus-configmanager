@@ -5,7 +5,7 @@
     "stablePHP": "8.3.14",
     "additional_checks": [
         {
-            "name": "PhpStan",
+            "name": "phpstan",
             "job": {
                 "php": "8.3",
                 "dependencies": "latest",
