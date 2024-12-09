@@ -5,9 +5,8 @@
     "stablePHP": "8.3.14",
     "additional_checks": [
         {
-            "name": "phpstan",
+            "name": "PHPStan",
             "job": {
-                "dependencies": "latest",
                 "command": "composer vendor/bin/phpstan -l 5 src analyse"
             }
         }
