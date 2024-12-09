@@ -3,7 +3,7 @@
         "pdo-mysql"
     ],
     "ignore_php_platform_requirements": {
-        "8.1": true
+        "8.2": true
     },
     "stablePHP": "8.3.14",
     "additional_checks": [
