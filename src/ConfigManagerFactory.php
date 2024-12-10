@@ -10,6 +10,8 @@ final class ConfigManagerFactory
 {
     public function __invoke(ContainerInterface $container): ConfigManager
     {
-        return new ConfigManager($container->get('config'));
+        return new ConfigManager(
+            $container->get('config')
+        );
     }
 }

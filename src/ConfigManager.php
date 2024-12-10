@@ -7,15 +7,14 @@ namespace Axleus\ConfigManager;
 use Laminas\ConfigAggregator\ArrayProvider;
 use Laminas\EventManager\AbstractListenerAggregate;
 use Laminas\EventManager\EventManagerInterface;
-use SplFileInfo;
 use Webimpress\SafeWriter\Exception\ExceptionInterface as FileWriterException;
 
-use function getcwd;
+use function realpath;
+use function unlink;
 
 class ConfigManager extends AbstractListenerAggregate
 {
     /**
-     *
      * @param non-empty-array{'config_cache_path': string, 'debug': bool} $config
      * @return void
      */
@@ -24,6 +23,10 @@ class ConfigManager extends AbstractListenerAggregate
     ) {
     }
 
+    /**
+     * @param int $priority
+     * @return void
+     */
     public function attach(EventManagerInterface $events, $priority = 1)
     {
         // If save/write fails stop propagation so the cache will not be busted
@@ -57,29 +60,26 @@ class ConfigManager extends AbstractListenerAggregate
         if ($this->config['debug']) {
             return true;
         }
-        $fileInfo = new SplFileInfo(getcwd() . '/' . $this->config['config_cache_path']);
-        if (! $fileInfo->isDir() && $fileInfo->isFile() && $fileInfo->isWritable()) {
-            $path = $fileInfo->getRealPath();
-            unset($fileInfo);
-            return unlink($path);
-        }
-        return false;
+
+        return @unlink(realpath($event->getTargetCache()));
     }
 
     public function onSaveConfig(Event\ConfigEvent $event): bool
     {
         try {
+            $isWritten      = false;
             $targetProvider = $event->getTarget();
-            $targetFile     = getcwd() . '/config/autoload/' . $event->getTargetFile();
-            $targetFilePath = (new SplFileInfo($targetFile))->getRealPath();
-            $currentConfig  = [$targetProvider => $this->config[$targetProvider]];
+            $targetFile     = $event->getTargetFile();
             // read, merge and process the config, no caching during this write
-            $configWriter   = new ConfigWriter([
-                new ArrayProvider($currentConfig),
-                new ArrayProvider([$targetProvider => $event->getUpdatedConfig()])
+            $configWriter = new ConfigWriter([
+                new ArrayProvider([$targetProvider => $this->config[$targetProvider]]),
+                new ArrayProvider($event->getUpdatedConfig()),
             ]);
-            // write file
-            $configWriter->writeConfig($targetFilePath);
+            if (! empty($targetFile)) {
+                // write file
+                $configWriter->writeConfig($targetFile);
+                $isWritten = true;
+            }
         } catch (FileWriterException $e) {
             $event->stopPropagation();
             throw $e;
@@ -87,6 +87,6 @@ class ConfigManager extends AbstractListenerAggregate
         if ($this->config['debug']) {
             $event->stopPropagation();
         }
-        return true;
+        return $isWritten;
     }
 }

@@ -8,6 +8,7 @@ use Laminas\EventManager\Event;
 
 class ConfigEvent extends Event
 {
+    public final const DEFAULT_CACHE     = __DIR__ . '/../../../../../data/cache/config-cache.php';
     public final const EVENT_CONFIG_SAVE = 'config.save';
     public final const EVENT_CONFIG_LOAD = 'config.load';
     public final const EVENT_BUST_CACHE  = 'config.bustcache';
@@ -36,12 +37,23 @@ class ConfigEvent extends Event
 
     public function setUpdatedConfig(array $updatedConfig): self
     {
-        $this->getParam('updatedConfig', $updatedConfig);
+        $this->setParam('updatedConfig', $updatedConfig);
         return $this;
     }
 
     public function getUpdatedConfig(): array
     {
-        return $this->getParam('updatedConfig');
+        return $this->getParam('updatedConfig', []);
+    }
+
+    public function setTargetCache(string $path): self
+    {
+        $this->setParam('targetCache', $path);
+        return $this;
+    }
+
+    public function getTargetCache(): string
+    {
+        return $this->getParam('targetCache', self::DEFAULT_CACHE);
     }
 }
