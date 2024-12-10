@@ -19,7 +19,7 @@ use function unlink;
 #[CoversClass(ConfigWriter::class)]
 final class ConfigWriterTest extends TestCase
 {
-    public final const CONFIG_FILE = __DIR__ . '/../config/test.global.php';
+    public const CONFIG_FILE = __DIR__ . '/../config/test.global.php';
     private string $dir;
     protected string $targetFile = FooConfigProvider::TARGET_FILE;
 
@@ -43,7 +43,7 @@ final class ConfigWriterTest extends TestCase
     public function testConfigWriterCanWriteConfig(): void
     {
         $writer = new ConfigWriter([
-            FooConfigProvider::class
+            FooConfigProvider::class,
         ]);
         $writer->writeConfig($this->dir . '/' . FooConfigProvider::TARGET_FILE);
         self::assertFileExists($this->dir . '/' . FooConfigProvider::TARGET_FILE);

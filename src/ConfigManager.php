@@ -10,11 +10,11 @@ use Laminas\EventManager\EventManagerInterface;
 use Webimpress\SafeWriter\Exception\ExceptionInterface as FileWriterException;
 
 use function realpath;
+use function unlink;
 
 class ConfigManager extends AbstractListenerAggregate
 {
     /**
-     *
      * @param non-empty-array{'config_cache_path': string, 'debug': bool} $config
      * @return void
      */
@@ -23,6 +23,10 @@ class ConfigManager extends AbstractListenerAggregate
     ) {
     }
 
+    /**
+     * @param int $priority
+     * @return void
+     */
     public function attach(EventManagerInterface $events, $priority = 1)
     {
         // If save/write fails stop propagation so the cache will not be busted
@@ -67,9 +71,9 @@ class ConfigManager extends AbstractListenerAggregate
             $targetProvider = $event->getTarget();
             $targetFile     = $event->getTargetFile();
             // read, merge and process the config, no caching during this write
-            $configWriter   = new ConfigWriter([
+            $configWriter = new ConfigWriter([
                 new ArrayProvider([$targetProvider => $this->config[$targetProvider]]),
-                new ArrayProvider($event->getUpdatedConfig())
+                new ArrayProvider($event->getUpdatedConfig()),
             ]);
             if (! empty($targetFile)) {
                 // write file

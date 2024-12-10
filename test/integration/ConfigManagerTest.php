@@ -25,12 +25,12 @@ use function var_export;
 #[UsesClass(ConfigEvent::class)]
 final class ConfigManagerTest extends TestCase
 {
-    private const CACHE_FILE = '/config-cache.php';
+    private const CACHE_FILE     = '/config-cache.php';
     private const UPDATED_CONFIG = [
         Resource\FooConfigProvider::class => [
-            'baz' => 'yada',
+            'baz'     => 'yada',
             'key_old' => 'value_new',
-        ]
+        ],
     ];
     private string $dir;
     private string $cacheFile;
@@ -67,10 +67,10 @@ final class ConfigManagerTest extends TestCase
     public function testConfigManagerCanBustCache(): void
     {
         $this->config['debug'] = false;
-        $configManager = new ConfigManager($this->config);
-        $event         = new ConfigEvent();
+        $configManager         = new ConfigManager($this->config);
+        $event                 = new ConfigEvent();
         $event->setTargetCache($this->cacheFile);
-        $eventResult   = $configManager->onBustCache($event);
+        $eventResult = $configManager->onBustCache($event);
         self::assertFileDoesNotExist($this->cacheFile);
         self::assertTrue($eventResult === true);
     }
@@ -78,12 +78,12 @@ final class ConfigManagerTest extends TestCase
     public function testConfigManagerCanWriteUpdatedConfig(): void
     {
         $this->config['debug'] = true;
-        $configManager    = new ConfigManager($this->config);
-        $configEvent      = new ConfigEvent(null, Resource\FooConfigProvider::class);
-        $this->targetFile = $this->targetFile . '/' . Resource\FooConfigProvider::TARGET_FILE;
+        $configManager         = new ConfigManager($this->config);
+        $configEvent           = new ConfigEvent(null, Resource\FooConfigProvider::class);
+        $this->targetFile     .= '/' . Resource\FooConfigProvider::TARGET_FILE;
         $configEvent->setTargetFile($this->targetFile);
         $configEvent->setUpdatedConfig(self::UPDATED_CONFIG);
-        $eventResult   = $configManager->onSaveConfig($configEvent);
+        $eventResult = $configManager->onSaveConfig($configEvent);
         self::assertFileExists($configEvent->getTargetFile());
         $writtenData = include $this->targetFile;
         self::assertSame(self::UPDATED_CONFIG, $writtenData);

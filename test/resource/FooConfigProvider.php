@@ -20,7 +20,7 @@ class FooConfigProvider implements ConfigProviderInterface
     public function getAxleusConfig(): array
     {
         return [
-            'baz' => 'bat',
+            'baz'     => 'bat',
             'key_old' => 'key_old',
         ];
     }

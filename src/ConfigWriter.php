@@ -10,6 +10,7 @@ use Laminas\ConfigAggregator\ConfigAggregator;
 use Webimpress\SafeWriter\Exception\ExceptionInterface as FileWriterException;
 use Webimpress\SafeWriter\FileWriter;
 
+use function date;
 use function sprintf;
 
 final class ConfigWriter extends ConfigAggregator implements ConfigWriterInterface
@@ -28,9 +29,9 @@ declare(strict_types=1);
 EOT;
 
     public function __construct(
-        iterable $providers   = [],
+        iterable $providers = [],
         array $postProcessors = [],
-        array $preProcessors  = [],
+        array $preProcessors = [],
     ) {
         parent::__construct(
             providers: $providers,

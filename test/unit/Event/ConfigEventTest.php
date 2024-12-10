@@ -11,7 +11,7 @@ final class ConfigEventTest extends TestCase
 {
     public function testCanSetPath(): void
     {
-        $path = '/some/path';
+        $path        = '/some/path';
         $configEvent = new ConfigEvent();
         $configEvent->setPath($path);
         $returned = $configEvent->getPath();
