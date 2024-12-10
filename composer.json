@@ -64,7 +64,8 @@
         "cs-fix": "phpcbf",
         "static-analysis": "phpstan analyse",
         "test": "phpunit --colors=always test",
-        "test-coverage": "phpunit --colors=always --coverage-clover clover.xml"
+        "test-coverage": "phpunit --colors=always --coverage-clover clover.xml",
+        "upload-coverage": "coveralls -v"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
