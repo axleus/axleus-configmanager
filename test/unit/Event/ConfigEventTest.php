@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace AxleusTest\ConfigManager\Event;
 
 use Axleus\ConfigManager\Event\ConfigEvent;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
+#[CoversClass(ConfigEvent::class)]
 final class ConfigEventTest extends TestCase
 {
     public function testCanSetPath(): void
