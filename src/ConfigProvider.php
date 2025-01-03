@@ -27,8 +27,6 @@ class ConfigProvider
 
     public function getListeners(): array
     {
-        return [
-            ['listener' => ConfigManager::class],
-        ];
+        return [ConfigManager::class];
     }
 }
