@@ -77,7 +77,7 @@ class ConfigManager extends AbstractListenerAggregate
             // read, merge and process the config, no caching during this write
             $configWriter = new ConfigWriter([
                 new ArrayProvider([$targetProvider => $this->config[$targetProvider]]),
-                new ArrayProvider($event->getUpdatedConfig()),
+                new ArrayProvider([$targetProvider => $event->getUpdatedConfig()]),
             ]);
             if (! empty($targetFile)) {
                 // write file
