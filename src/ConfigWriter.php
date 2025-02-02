@@ -65,8 +65,9 @@ EOT;
             } else {
                 FileWriter::writeFile($targetFile, $contents);
             }
-        } catch (FileWriterException) {
+        } catch (FileWriterException $e) {
             // ignore errors writing file
+            throw $e;
         }
     }
 }

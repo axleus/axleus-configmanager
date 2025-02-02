@@ -9,6 +9,9 @@ use Laminas\EventManager\AbstractListenerAggregate;
 use Laminas\EventManager\EventManagerInterface;
 use Webimpress\SafeWriter\Exception\ExceptionInterface as FileWriterException;
 
+use function basename;
+use function file_exists;
+use function getcwd;
 use function realpath;
 use function unlink;
 
@@ -70,6 +73,7 @@ class ConfigManager extends AbstractListenerAggregate
             $isWritten      = false;
             $targetProvider = $event->getTarget();
             $targetFile     = $event->getTargetFile();
+            $targetFile     = ! empty($targetFile) ? basename($targetFile) : null;
             // read, merge and process the config, no caching during this write
             $configWriter = new ConfigWriter([
                 new ArrayProvider([$targetProvider => $this->config[$targetProvider]]),
@@ -77,9 +81,10 @@ class ConfigManager extends AbstractListenerAggregate
             ]);
             if (! empty($targetFile)) {
                 // write file
+                $targetFile = getcwd() . '/config/autoload/' . $targetFile;
                 $configWriter->writeConfig($targetFile);
-                $isWritten = true;
             }
+            $isWritten = true;
         } catch (FileWriterException $e) {
             $event->stopPropagation();
             throw $e;
